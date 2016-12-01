@@ -57,11 +57,27 @@ public class Laba2Async {
                     SerialPort.PARITY_NONE);
             com1.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
             com2.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
-            com1.writeString("Get data" + "\n" + " Opachki");
-            PortReader prtReader = new PortReader(com1);
-            prtReader.serialEvent(new SerialPortEvent(com1.getPortName(), SerialPortEvent.RXCHAR, 1));
-            com1.addEventListener(prtReader, SerialPort.MASK_RXCHAR);
-            com1.writeString("Get data" + "\n" + " Opachki");
+//            byte[] CDRIVES = hexStringToByteArray("e04fd020ea3a6910a2d808002b30309d");
+//            com2.writeBytes(CDRIVES);
+            //создаем портридеры для наших портов. Порт ридер нужен, чтобы обрабатывать события.
+            PortReader prtCom1Reader = new PortReader(com1);
+            PortReader prtCom2Reader = new PortReader(com2);
+            //разрешаем прерывания при сигнале Break
+            com1.addEventListener(prtCom1Reader, SerialPort.MASK_BREAK);
+            com2.addEventListener(prtCom2Reader, SerialPort.MASK_BREAK);
+            //создаем события BreakInterrupt для портов
+            SerialPortEvent breakCom1PortEvent = new SerialPortEvent(com1.getPortName(), SerialPortEvent.BREAK, 9);
+            SerialPortEvent breakCom2PortEvent = new SerialPortEvent(com2.getPortName(), SerialPortEvent.BREAK, 9);
+            //инициируем начало общения портов посылаем в первый порт сообщение
+            com2.writeString("Start session");
+            for (int i = 0; i < n; i++){
+                message = basisMessage + "_" + i;
+                prtCom1Reader.serialEvent(breakCom1PortEvent);
+                prtCom2Reader.serialEvent(breakCom2PortEvent);
+            }
+            com1.readString();
+            com2.readString();
+
         }catch (SerialPortException ex){
             System.out.println(ex);
         } finally {
@@ -73,26 +89,43 @@ public class Laba2Async {
             }
         }
     }
-    private static class PortReader implements SerialPortEventListener {
+    protected static class PortReader implements SerialPortEventListener {
 
         private SerialPort serialPort;
 
-        public PortReader( SerialPort serialPort) {
+        public  PortReader( SerialPort serialPort) {
             this.serialPort = serialPort;
         }
 
         public void serialEvent(SerialPortEvent event) {
-            if(event.isRXCHAR() && event.getEventValue() > 0){
+            if(event.isBREAK() && event.getEventValue() > 0){
                 try {
                     //Получаем ответ от устройства, обрабатываем данные и т.д.
-                    String data = serialPort.readString(event.getEventValue());
+//                    System.out.println( new String(serialPort.readBytes(event.getEventValue())));
+                    System.out.println("From " + serialPort.getPortName() + " read next message: " +  serialPort.readString());
+                    //Спим n секунд
+                    try {
+                        Thread.sleep(time);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     //И снова отправляем запрос
-                    serialPort.writeString("Get data");
+                    serialPort.writeString(message);
                 }
                 catch (SerialPortException ex) {
                     System.out.println(ex);
                 }
             }
+        }
+        //метод для конвертации формата данных String  в массив byte
+        public  byte[] hexStringToByteArray(String s) {
+            int len = s.length();
+            byte[] data = new byte[len / 2];
+            for (int i = 0; i < len; i += 2) {
+                data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                        + Character.digit(s.charAt(i+1), 16));
+            }
+            return data;
         }
     }
 }
