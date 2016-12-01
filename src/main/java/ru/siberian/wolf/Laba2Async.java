@@ -11,20 +11,41 @@ import jssc.SerialPortException;
 public class Laba2Async {
     private static SerialPort com1;
     private static SerialPort com2;
+    public static int n = 2; //дефолтное значение колличества сеансов связи
+    public static String message = "Siberia"; //дефолтное значение сообщения
+    public static long time = 2000L; //дефолтное значение времени сна
+
+    /**
+     *
+     * @param args
+     * args 1 - колличество сеансов связи
+     * args 2 - сообщения для обмена
+     * args 3 - время сна
+     */
 
     public static void main(String[] args){
+        //читаем аргументы, если они есть
+        if (args.length > 0){
+            switch (args.length){
+                case 1: n = Integer.parseInt(args[0]); break;
+                case 2: n = Integer.parseInt(args[0]); message = args[1]; break;
+                case 3: n = Integer.parseInt(args[0]); message = args[1]; time = Long.parseLong(args[2]); break;
+
+            }
+        }
+        String basisMessage = message;
         com1 = new SerialPort("COM1");//создаем объект, отвечающий за порт СОМ1
         com2 = new SerialPort("COM2");//создаем объект, отвечающий за порт СОМ2
         try{
             try {
                 com1.openPort();//Пытаемся открыть порт. Если порт занят, то валимся с ошибкой.
             } catch (SerialPortException ex){
-                System.out.println("Порт занят.");
+                System.out.println("Порт занят либо нет такого порта.");
             }
             try {
                 com2.openPort();
             } catch (SerialPortException ex){
-                System.out.println("Порт занят.");//Пытаемся открыть порт. Если порт занят, то валимся с ошибкой.
+                System.out.println("Порт занят либо нет такого порта.");//Пытаемся открыть порт. Если порт занят, то валимся с ошибкой.
             }
             com1.setParams(SerialPort.BAUDRATE_9600,
                     SerialPort.DATABITS_5,
