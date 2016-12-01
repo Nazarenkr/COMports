@@ -1,1 +1,1 @@
-# COMports
+# This project contains source for some labarotory works in book "ПРАКТИКУМ ПО ИНТЕРФЕЙСАМ ПОСЛЕДОВАТЕЛЬНОЙ ПЕРЕДАЧИ ДАННЫХ:СТАНДАРТЫ, ПРОГРАММИРОВАНИЕ,МОДЕЛИРОВАНИЕ" authors:"В.А. Сафоненко, А.В. Просандеев, М.Г. Смирнов" 2012 year of publish.
