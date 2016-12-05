@@ -8,6 +8,16 @@ import jssc.SerialPortException;
 /**
  * Created by Siberian wolf on 10.11.2016.
  */
+
+/*
+*
+*Данная программа управляет передачей данных между двумя сом портами. Для запуска программы необходимо наличие:
+ *  1)Java SE Runtime Environment версии 1.7 и выше(скачать можно отсюда http://www.oracle.com/technetwork/java/javase/downloads/jre8-downloads-2133155.html)
+ *  2)2 СОМ порта.
+ * Чтобы запустить данную программу необходимо перейти в дерикторию с jar файлом данной программы и выполнить следующую команду:
+ * java -jar comPorts-1.0-SNAPSHOT-jar-with-dependencies.jar args1 args2 args3 args4 args5
+ * значение аргументов смотрите ниже.
+ *  */
 public class Laba2Async {
     private static SerialPort com1;
     private static SerialPort com2;
@@ -23,7 +33,10 @@ public class Laba2Async {
      * @param args
      * args 1 - колличество сеансов связи
      * args 2 - сообщения для обмена
-     * args 3 - время сна
+     * args 3 - время сна, задается в миллисекундах
+     * args 4 - имя первого порта
+     * args 5 - имя второго порта
+     *
      */
 
     public static void main(String[] args){
