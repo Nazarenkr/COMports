@@ -14,6 +14,9 @@ public class Laba2Async {
     public static int n = 2; //дефолтное значение колличества сеансов связи
     public static String message = "Siberia"; //дефолтное значение сообщения
     public static long time = 2000L; //дефолтное значение времени сна
+    public static String firstPort = "COM2";//дефолтное имя первого порта
+    public static String secondPort = "COM3";//дефолтное имя первого порта
+
 
     /**
      *
@@ -30,12 +33,14 @@ public class Laba2Async {
                 case 1: n = Integer.parseInt(args[0]); break;
                 case 2: n = Integer.parseInt(args[0]); message = args[1]; break;
                 case 3: n = Integer.parseInt(args[0]); message = args[1]; time = Long.parseLong(args[2]); break;
+                case 4: n = Integer.parseInt(args[0]); message = args[1]; time = Long.parseLong(args[2]); firstPort= args[3]; break;
+                case 5: n = Integer.parseInt(args[0]); message = args[1]; time = Long.parseLong(args[2]); firstPort= args[3]; secondPort= args[4]; break;
 
             }
         }
         String basisMessage = message;
-        com1 = new SerialPort("COM1");//создаем объект, отвечающий за порт СОМ1
-        com2 = new SerialPort("COM2");//создаем объект, отвечающий за порт СОМ2
+        com1 = new SerialPort(firstPort);//создаем объект, отвечающий за порт СОМ1
+        com2 = new SerialPort(secondPort);//создаем объект, отвечающий за порт СОМ2
         try{
             try {
                 com1.openPort();//Пытаемся открыть порт. Если порт занят, то валимся с ошибкой.
